@@ -1,0 +1,8 @@
+.Tilt {
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin: 0;
+}
