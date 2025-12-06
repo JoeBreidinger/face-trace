@@ -1,7 +1,7 @@
 import React from "react";
 import Logo from "../Logo/Logo";
 
-const Navigation = () => {
+const Navigation = ({ onRouteChange }) => {
   return (
     <nav
       style={{
@@ -11,10 +11,12 @@ const Navigation = () => {
         padding: "1rem 2rem",
       }}
     >
-      <Logo />
+      <div onClick={() => window.location.reload()} className="pointer">
+        <Logo />
+      </div>
       <p
+        onClick={() => onRouteChange("signin")}
         className="f3 link dim black underline pa3 pointer"
-        style={{ marginLeft: "auto" }}
       >
         Sign Out
       </p>
