@@ -57,6 +57,24 @@ class App extends Component {
     };
   }
 
+  // calculateFaceLocation = (data) => {
+  //   const clarifaiFace =
+  //     data.outputs[0].data.regions[0].region_info.bounding_box;
+  //   const image = document.getElementById("inputimage");
+  //   const width = Number(image.width);
+  //   const height = Number(image.height);
+  //   return {
+  //     leftCol: clarifaiFace.left_col * width,
+  //     topRow: clarifaiFace.top_row * height,
+  //     rightCol: width - clarifaiFace.right_col * width,
+  //     bottomRow: height - clarifaiFace.bottom_row * height,
+  //   };
+  // };
+
+  // displayFaceBox = (box) => {
+  //   this.setState({ box: box });
+  // };
+
   onInputChange = (event) => {
     this.setState({ input: event.target.value });
     console.log(event.target.value);
@@ -65,27 +83,34 @@ class App extends Component {
   onButtonSubmit = () => {
     this.setState({ imageUrl: this.state.input });
 
-    fetch("http://localhost:5000/api/clarifai", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ imageUrl: this.state.input }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        // You may need to adjust this depending on Clarifai's gRPC response format
-        if (
-          data &&
-          data.outputs &&
-          data.outputs[0] &&
-          data.outputs[0].data &&
-          data.outputs[0].data.regions
-        ) {
-          this.displayFaceBox(this.calculateFaceLocation(data));
-        } else {
-          console.log("No face detected or unexpected response:", data);
-        }
+    fetch(
+      "https://api.clarifai.com/v2/models/" + MODEL_ID + "/outputs",
+      returnClarifaiRequestOptions(this.state.input)
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        const regions = result.outputs[0].data.regions;
+
+        regions.forEach((region) => {
+          // Accessing and rounding the bounding box values
+          const boundingBox = region.region_info.bounding_box;
+          const topRow = boundingBox.top_row.toFixed(3);
+          const leftCol = boundingBox.left_col.toFixed(3);
+          const bottomRow = boundingBox.bottom_row.toFixed(3);
+          const rightCol = boundingBox.right_col.toFixed(3);
+
+          region.data.concepts.forEach((concept) => {
+            // Accessing and rounding the concept value
+            const name = concept.name;
+            const value = concept.value.toFixed(4);
+
+            console.log(
+              `${name}: ${value} BBox: ${topRow}, ${leftCol}, ${bottomRow}, ${rightCol}`
+            );
+          });
+        });
       })
-      .catch((err) => console.error(err));
+      .catch((error) => console.log("error", error));
   };
 
   render() {
