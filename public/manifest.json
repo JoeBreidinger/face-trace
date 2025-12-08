@@ -1,6 +1,6 @@
 {
-  "short_name": "Face Trace",
-  "name": "Face Trace - Face Detection App",
+  "short_name": "FaceTrace",
+  "name": "FaceTrace - Face Detection App",
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",

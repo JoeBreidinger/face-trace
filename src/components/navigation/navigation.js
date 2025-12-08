@@ -1,8 +1,7 @@
-import React from "react";
 import Logo from "../Logo/Logo";
 import "./Navigation.css";
 
-const Navigation = ({ onRouteChange, isSignedIn }) => {
+const Navigation = ({ onRouteChange, isSignedIn, onResetForm }) => {
   return isSignedIn ? (
     <nav
       style={{
@@ -12,7 +11,7 @@ const Navigation = ({ onRouteChange, isSignedIn }) => {
         padding: "1rem 2rem",
       }}
     >
-      <div onClick={() => onRouteChange("home")} className="pointer">
+      <div onClick={onResetForm} className="pointer">
         <Logo />
       </div>
       <p

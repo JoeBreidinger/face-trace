@@ -2,3 +2,25 @@
   display: flex;
   flex-direction: row;
 }
+
+@media (max-width: 474px) {
+  nav {
+    padding: 0.5rem 1rem !important;
+    transform-origin: center;
+  }
+
+  nav div {
+    scale: calc(0.8) !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  nav p {
+    font-size: 0.875rem !important;
+    padding: 0.5rem !important;
+  }
+
+  .right-align {
+    gap: 0.5rem !important;
+  }
+}

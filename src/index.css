@@ -10,7 +10,43 @@ body {
   background-size: cover;
 }
 
+html,
+#root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+/* Media queries for small screens */
+
+/* For screens 475px and under */
+@media (max-width: 474px) {
+  html,
+  body,
+  #root {
+    height: 100vh !important;
+    width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden;
+  }
+}
+
+/* For screens 475px - 535px */
+@media (min-width: 475px) and (max-width: 535px) {
+  html,
+  body,
+  #root {
+    height: 100vh !important;
+    width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden;
+  }
 }

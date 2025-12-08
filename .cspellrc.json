@@ -1,0 +1,6 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": ["Clarifai", "FaceTrace"],
+  "ignorePaths": ["node_modules", ".git", "build", "dist"]
+}

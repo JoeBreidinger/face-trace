@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { Component } from "react";
+import { Component } from "react";
 import Navigation from "./components/Navigation/Navigation";
 import Register from "./components/Register/Register";
 import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
@@ -9,15 +9,10 @@ import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 import Background from "./components/ParticlesBG/ParticlesBG";
 
 //Clarifai API:
-const MODEL_ID = "face-detection";
-
 const returnClarifaiRequestOptions = (imageUrl) => {
-  // Your PAT (Personal Access Token) can be found in Clarifai's Account Security section
-  const PAT = "290305ca11094226aa3a2b6eca66c5da";
-  // You can keep the 'clarifai'/'main' without changing it to your own unless you want to.
-  // This will use the public Clarifai model so you dont need to create an app:
-  const USER_ID = "3umw0pbpnlo";
-  const APP_ID = "FaceTrace";
+  const PAT = process.env.REACT_APP_CLARIFAI_PAT;
+  const USER_ID = process.env.REACT_APP_CLARIFAI_USER_ID;
+  const APP_ID = process.env.REACT_APP_CLARIFAI_APP_ID;
 
   const IMAGE_URL = imageUrl;
 
@@ -87,23 +82,23 @@ class App extends Component {
       .catch((error) => console.error("Error fetching from server:", error));
   }
 
-  // calculateFaceLocation = (data) => {
-  //   const clarifaiFace =
-  //     data.outputs[0].data.regions[0].region_info.bounding_box;
-  //   const image = document.getElementById("inputimage");
-  //   const width = Number(image.width);
-  //   const height = Number(image.height);
-  //   return {
-  //     leftCol: clarifaiFace.left_col * width,
-  //     topRow: clarifaiFace.top_row * height,
-  //     rightCol: width - clarifaiFace.right_col * width,
-  //     bottomRow: height - clarifaiFace.bottom_row * height,
-  //   };
-  // };
+  calculateFaceLocation = (data) => {
+    const clarifaiFace =
+      data.outputs[0].data.regions[0].region_info.bounding_box;
+    const image = document.getElementById("inputimage");
+    const width = Number(image.width);
+    const height = Number(image.height);
+    return {
+      leftCol: clarifaiFace.left_col * width,
+      topRow: clarifaiFace.top_row * height,
+      rightCol: width - clarifaiFace.right_col * width,
+      bottomRow: height - clarifaiFace.bottom_row * height,
+    };
+  };
 
-  // displayFaceBox = (box) => {
-  //   this.setState({ box: box });
-  // };
+  displayFaceBox = (box) => {
+    this.setState({ box: box });
+  };
 
   onInputChange = (event) => {
     this.setState({ input: event.target.value });
@@ -113,10 +108,6 @@ class App extends Component {
   onButtonSubmit = () => {
     this.setState({ imageUrl: this.state.input });
 
-    // fetch(
-    //   "https://api.clarifai.com/v2/models/" + MODEL_ID + "/outputs",
-    //   returnClarifaiRequestOptions(this.state.input)
-    // )
     const options = returnClarifaiRequestOptions(this.state.input);
     console.log(options);
     fetch("http://localhost:3000/imageurl", options)
@@ -171,6 +162,14 @@ class App extends Component {
     }
   };
 
+  onResetForm = () => {
+    this.setState({
+      input: "",
+      imageUrl: "",
+      box: {},
+    });
+  };
+
   render() {
     return (
       <div className="App">
@@ -178,6 +177,7 @@ class App extends Component {
         <Navigation
           onRouteChange={this.onRouteChange}
           isSignedIn={this.state.isSignedIn}
+          onResetForm={this.onResetForm}
         />
         {this.state.route === "home" ? (
           <div>
@@ -188,6 +188,7 @@ class App extends Component {
             <ImageLinkForm
               onInputChange={this.onInputChange}
               onButtonSubmit={this.onButtonSubmit}
+              input={this.state.input}
             />
             <FaceRecognition
               box={this.state.box}

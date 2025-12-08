@@ -193,3 +193,49 @@
 .pointer:hover {
   cursor: pointer;
 }
+
+/* Media queries for SignIn article responsiveness */
+
+/* For screens 475px and under - center the article and ensure proper padding */
+@media (max-width: 474px) {
+  .w-100 {
+    width: 100% !important;
+  }
+
+  .w-50-m {
+    width: 100% !important;
+  }
+
+  .w-25-l {
+    width: 100% !important;
+  }
+
+  .mw8 {
+    max-width: none !important;
+  }
+
+  .center {
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  article {
+    padding: 0 0.5rem !important;
+  }
+}
+
+/* For screens 475px - 535px - reduce left and right margins */
+@media (min-width: 475px) and (max-width: 535px) {
+  .w-100 {
+    width: calc(100% - 2rem) !important;
+  }
+
+  .w-50-m {
+    width: calc(100% - 2rem) !important;
+  }
+
+  .center {
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
