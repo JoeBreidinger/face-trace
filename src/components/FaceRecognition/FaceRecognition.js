@@ -1,4 +1,3 @@
-import react from "react";
 import "./FaceRecognition.css";
 
 const FaceRecognition = ({ imageUrl, box }) => {
@@ -12,6 +11,7 @@ const FaceRecognition = ({ imageUrl, box }) => {
           src={imageUrl || null}
           width="500px"
           height="auto"
+          //style={{ padding: "0.5rem" }}
         />
         <div
           className="bounding-box"
