@@ -8,7 +8,7 @@ import Rank from "./components/Rank/Rank";
 import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 import Background from "./components/ParticlesBG/ParticlesBG";
 
-//Clarifai API:
+//Clarifai API request (FE to Proxy):
 const returnClarifaiRequestOptions = (imageUrl) => {
   const PAT = process.env.REACT_APP_CLARIFAI_PAT;
   const USER_ID = process.env.REACT_APP_CLARIFAI_USER_ID;
@@ -50,7 +50,7 @@ class App extends Component {
     this.state = {
       input: "",
       imageUrl: "",
-      box: {},
+      box: [],
       route: "signin",
       isSignedIn: false,
       user: {
@@ -83,20 +83,24 @@ class App extends Component {
   }
 
   calculateFaceLocation = (data) => {
-    const clarifaiFace =
-      data.outputs[0].data.regions[0].region_info.bounding_box;
+    const regions = data.outputs[0].data.regions;
     const image = document.getElementById("inputimage");
     const width = Number(image.width);
     const height = Number(image.height);
-    return {
-      leftCol: clarifaiFace.left_col * width,
-      topRow: clarifaiFace.top_row * height,
-      rightCol: width - clarifaiFace.right_col * width,
-      bottomRow: height - clarifaiFace.bottom_row * height,
-    };
+    console.log("Calculating face locations for", regions.length, "faces");
+    return regions.map((region) => {
+      const clarifaiFace = region.region_info.bounding_box;
+      return {
+        leftCol: clarifaiFace.left_col * width,
+        topRow: clarifaiFace.top_row * height,
+        rightCol: width - clarifaiFace.right_col * width,
+        bottomRow: height - clarifaiFace.bottom_row * height,
+      };
+    });
   };
 
   displayFaceBox = (box) => {
+    console.log("Setting box state with:", box);
     this.setState({ box: box });
   };
 
@@ -106,50 +110,40 @@ class App extends Component {
   };
 
   onButtonSubmit = () => {
-    this.setState({ imageUrl: this.state.input });
-
-    const options = returnClarifaiRequestOptions(this.state.input);
-    console.log(options);
-    fetch("http://localhost:3000/imageurl", options)
-      .then((response) => response.json())
-      .then((result) => {
-        console.log("Clarifai API response:", result);
-        if (result) {
-          fetch("http://localhost:3000/image", {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              id: this.state.user.id,
-            }),
-          })
+    this.setState({ imageUrl: this.state.input }, () => {
+      const image = document.getElementById("inputimage");
+      if (image) {
+        image.onload = () => {
+          const options = returnClarifaiRequestOptions(this.state.input);
+          console.log(options);
+          fetch("http://localhost:3000/imageurl", options)
             .then((response) => response.json())
-            .then((count) => {
-              this.setState(Object.assign(this.state.user, { entries: count }));
+            .then((result) => {
+              console.log("Clarifai API response:", result);
+              if (result) {
+                fetch("http://localhost:3000/image", {
+                  method: "PUT",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    id: this.state.user.id,
+                  }),
+                })
+                  .then((response) => response.json())
+                  .then((count) => {
+                    this.setState(
+                      Object.assign(this.state.user, { entries: count })
+                    );
+                  })
+                  .catch((err) =>
+                    console.error("Error updating entries:", err)
+                  );
+              }
+              this.displayFaceBox(this.calculateFaceLocation(result));
             })
-            .catch((err) => console.error("Error updating entries:", err));
-        }
-        const regions = result.outputs[0].data.regions;
-
-        regions.forEach((region) => {
-          // Accessing and rounding the bounding box values
-          const boundingBox = region.region_info.bounding_box;
-          const topRow = boundingBox.top_row.toFixed(3);
-          const leftCol = boundingBox.left_col.toFixed(3);
-          const bottomRow = boundingBox.bottom_row.toFixed(3);
-          const rightCol = boundingBox.right_col.toFixed(3);
-
-          region.data.concepts.forEach((concept) => {
-            // Accessing and rounding the concept value
-            const name = concept.name;
-            const value = concept.value.toFixed(4);
-
-            console.log(
-              `${name}: ${value} BBox: ${topRow}, ${leftCol}, ${bottomRow}, ${rightCol}`
-            );
-          });
-        });
-      })
-      .catch((error) => console.log("error", error));
+            .catch((error) => console.log("error", error));
+        };
+      }
+    });
   };
 
   onRouteChange = (route) => {
