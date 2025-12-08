@@ -40,7 +40,7 @@ const returnClarifaiRequestOptions = (imageUrl) => {
   const requestOptions = {
     method: "POST",
     headers: {
-      Accept: "application/json",
+      "Content-Type": "application/json",
       Authorization: "Key " + PAT,
     },
     body: raw,
@@ -113,10 +113,13 @@ class App extends Component {
   onButtonSubmit = () => {
     this.setState({ imageUrl: this.state.input });
 
-    fetch(
-      "https://api.clarifai.com/v2/models/" + MODEL_ID + "/outputs",
-      returnClarifaiRequestOptions(this.state.input)
-    )
+    // fetch(
+    //   "https://api.clarifai.com/v2/models/" + MODEL_ID + "/outputs",
+    //   returnClarifaiRequestOptions(this.state.input)
+    // )
+    const options = returnClarifaiRequestOptions(this.state.input);
+    console.log(options);
+    fetch("http://localhost:3000/imageurl", options)
       .then((response) => response.json())
       .then((result) => {
         console.log("Clarifai API response:", result);
