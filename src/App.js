@@ -119,6 +119,21 @@ class App extends Component {
     )
       .then((response) => response.json())
       .then((result) => {
+        console.log("Clarifai API response:", result);
+        if (result) {
+          fetch("http://localhost:3000/image", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              id: this.state.user.id,
+            }),
+          })
+            .then((response) => response.json())
+            .then((count) => {
+              this.setState(Object.assign(this.state.user, { entries: count }));
+            })
+            .catch((err) => console.error("Error updating entries:", err));
+        }
         const regions = result.outputs[0].data.regions;
 
         regions.forEach((region) => {
@@ -163,7 +178,10 @@ class App extends Component {
         />
         {this.state.route === "home" ? (
           <div>
-            <Rank />
+            <Rank
+              name={this.state.user.name}
+              entries={this.state.user.entries}
+            />
             <ImageLinkForm
               onInputChange={this.onInputChange}
               onButtonSubmit={this.onButtonSubmit}
@@ -174,7 +192,7 @@ class App extends Component {
             />
           </div>
         ) : this.state.route === "signin" ? (
-          <SignIn onRouteChange={this.onRouteChange} />
+          <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
         ) : (
           <Register
             loadUser={this.loadUser}

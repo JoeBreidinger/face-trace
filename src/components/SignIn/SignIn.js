@@ -18,6 +18,7 @@ class SignIn extends React.Component {
   };
 
   onSubmitSignIn = () => {
+    console.log("Attempting sign in with:", this.state.signInEmail);
     fetch("http://localhost:3000/signin", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -26,12 +27,20 @@ class SignIn extends React.Component {
         password: this.state.signInPassword,
       }),
     })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data === "success") {
+      .then((response) => {
+        console.log("Response status:", response.status);
+        return response.json();
+      })
+      .then((user) => {
+        console.log("Backend response:", user);
+        if (user === "success" || user.id) {
+          console.log("Sign in successful, routing to home");
+          if (user.id) {
+            this.props.loadUser(user);
+          }
           this.props.onRouteChange("home");
         } else {
-          console.error("Sign in failed: ", data);
+          console.error("Sign in failed - no user id in response:", user);
         }
       })
       .catch((err) => console.error("Sign in request error:", err));
