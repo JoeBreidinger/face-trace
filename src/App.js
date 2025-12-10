@@ -39,13 +39,6 @@ class App extends Component {
     });
   };
 
-  componentDidMount() {
-    fetch(`${process.env.REACT_APP_API_URL}/`)
-      .then((response) => response.json())
-      .then((data) => console.log(data))
-      .catch((error) => console.error("Error fetching from server:", error));
-  }
-
   calculateFaceLocation = (data) => {
     const regions = data.outputs[0].data.regions;
     const image = document.getElementById("inputimage");
