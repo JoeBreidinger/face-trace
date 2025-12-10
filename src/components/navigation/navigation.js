@@ -15,7 +15,10 @@ const Navigation = ({ onRouteChange, isSignedIn, onResetForm }) => {
         <Logo />
       </div>
       <p
-        onClick={() => onRouteChange("signout")}
+        onClick={() => {
+          onResetForm();
+          onRouteChange("signout");
+        }}
         className="f3 link dim black underline pa3 pointer"
       >
         Sign Out
