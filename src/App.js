@@ -8,43 +8,6 @@ import Rank from "./components/Rank/Rank";
 import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 import Background from "./components/ParticlesBG/ParticlesBG";
 
-//Clarifai API request (FE to Proxy):
-
-// const returnClarifaiRequestOptions = (imageUrl) => {
-//   const PAT = process.env.REACT_APP_CLARIFAI_PAT;
-//   const USER_ID = process.env.REACT_APP_CLARIFAI_USER_ID;
-//   const APP_ID = process.env.REACT_APP_CLARIFAI_APP_ID;
-
-//   const IMAGE_URL = imageUrl;
-
-//   const raw = JSON.stringify({
-//     user_app_id: {
-//       user_id: USER_ID,
-//       app_id: APP_ID,
-//     },
-//     inputs: [
-//       {
-//         data: {
-//           image: {
-//             url: IMAGE_URL,
-//           },
-//         },
-//       },
-//     ],
-//   });
-
-//   const requestOptions = {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//       Authorization: "Key " + PAT,
-//     },
-//     body: raw,
-//   };
-
-//   return requestOptions;
-// };
-
 class App extends Component {
   constructor() {
     super();
@@ -77,7 +40,7 @@ class App extends Component {
   };
 
   componentDidMount() {
-    fetch("http://localhost:3000/")
+    fetch(`${process.env.API_URL}/`)
       .then((response) => response.json())
       .then((data) => console.log(data))
       .catch((error) => console.error("Error fetching from server:", error));
@@ -110,33 +73,13 @@ class App extends Component {
     console.log(event.target.value);
   };
 
-  /////////////////////////////////////
-  // Instead of calling Clarifai directly
-  // const response = await stub.PostModelOutputs(...)
-
-  // // Call your backend instead
-  // const response = await fetch(
-  //   "http://localhost:3000/api/clarifai/detect-faces",
-  //   {
-  //     method: "POST",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify({ imageUrl: imageUrl }),
-  //   }
-  // );
-
-  // const data = await response.json();
-
-  // data will contain the same structure:
-  // data.outputs[0].data.regions[0].region_info.bounding_box
-  // with top_row, left_col, bottom_row, right_col values
-
   onButtonSubmit = () => {
     this.setState({ imageUrl: this.state.input }, () => {
       const image = document.getElementById("inputimage");
       if (image) {
         image.onload = () => {
           // Call your backend instead of Clarifai directly
-          fetch("http://localhost:3000/api/clarifai/detect-faces", {
+          fetch(`${process.env.API_URL}/api/clarifai/detect-faces`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ imageUrl: this.state.input }),
@@ -145,7 +88,7 @@ class App extends Component {
             .then((result) => {
               console.log("Clarifai API response:", result);
               if (result) {
-                fetch("http://localhost:3000/image", {
+                fetch(`${process.env.API_URL}/image`, {
                   method: "PUT",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({
