@@ -19,7 +19,7 @@ class SignIn extends React.Component {
 
   onSubmitSignIn = () => {
     console.log("Attempting sign in with:", this.state.signInEmail);
-    fetch(`${process.env.API_URL}/signin`, {
+    fetch(`${process.env.REACT_APP_API_URL}/signin`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

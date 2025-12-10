@@ -40,7 +40,7 @@ class App extends Component {
   };
 
   componentDidMount() {
-    fetch(`${process.env.API_URL}/`)
+    fetch(`${process.env.REACT_APP_API_URL}/`)
       .then((response) => response.json())
       .then((data) => console.log(data))
       .catch((error) => console.error("Error fetching from server:", error));
@@ -79,7 +79,7 @@ class App extends Component {
       if (image) {
         image.onload = () => {
           // Call your backend instead of Clarifai directly
-          fetch(`${process.env.API_URL}/api/clarifai/detect-faces`, {
+          fetch(`${process.env.REACT_APP_API_URL}/api/clarifai/detect-faces`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ imageUrl: this.state.input }),
@@ -88,7 +88,7 @@ class App extends Component {
             .then((result) => {
               console.log("Clarifai API response:", result);
               if (result) {
-                fetch(`${process.env.API_URL}/image`, {
+                fetch(`${process.env.REACT_APP_API_URL}/image`, {
                   method: "PUT",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({
