@@ -2,6 +2,16 @@
   margin-top: 2rem;
   display: flex;
   justify-content: center;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.absolute {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  max-width: 500px;
 }
 
 .regions {
@@ -11,4 +21,3 @@
   flex-wrap: wrap;
   justify-content: center;
   cursor: crosshair;
-}

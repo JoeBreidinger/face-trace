@@ -9,9 +9,9 @@ const FaceRecognition = ({ imageUrl, box }) => {
           id="inputimage"
           alt=""
           src={imageUrl || null}
-          width="500px"
+          width="100%"
           height="auto"
-          style={{ padding: "0.5rem" }}
+          style={{ padding: "0.5rem", maxWidth: "500px" }}
         />
         {Array.isArray(box) ? (
           box.map((face, index) => (
