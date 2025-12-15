@@ -7,6 +7,7 @@ class SignIn extends React.Component {
     this.state = {
       signInEmail: "",
       signInPassword: "",
+      loading: false,
     };
   }
 
@@ -19,6 +20,7 @@ class SignIn extends React.Component {
 
   onSubmitSignIn = () => {
     console.log("Attempting sign in with:", this.state.signInEmail);
+    this.setState({ loading: true });
     fetch(`${process.env.REACT_APP_API_URL}/signin`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -33,6 +35,7 @@ class SignIn extends React.Component {
       })
       .then((user) => {
         console.log("Backend response:", user);
+        this.setState({ loading: false });
         if (user === "success" || user.id) {
           console.log("Sign in successful, routing to home");
           if (user.id) {
@@ -43,7 +46,10 @@ class SignIn extends React.Component {
           console.error("Sign in failed - no user id in response:", user);
         }
       })
-      .catch((err) => console.error("Sign in request error:", err));
+      .catch((err) => {
+        console.error("Sign in request error:", err);
+        this.setState({ loading: false });
+      });
   };
 
   render() {
@@ -83,8 +89,9 @@ class SignIn extends React.Component {
               <input
                 className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib"
                 type="button"
-                value="Sign in"
+                value={this.state.loading ? "Loading..." : "Sign in"}
                 onClick={this.onSubmitSignIn}
+                disabled={this.state.loading}
               />
             </div>
             <div className="lh-copy mt3 pointer">
