@@ -34,7 +34,6 @@ class SignIn extends React.Component {
         return response.json();
       })
       .then((user) => {
-        console.log("Backend response:", user);
         this.setState({ loading: false });
         if (user === "success" || user.id) {
           console.log("Sign in successful, routing to home");
