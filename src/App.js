@@ -135,6 +135,24 @@ class App extends Component {
         />
         {this.state.route === "home" ? (
           <div>
+            <div
+              id="maintenance-message"
+              style={{
+                backgroundColor: "#fff3cd",
+                color: "#856404",
+                padding: "15px",
+                margin: "20px auto",
+                maxWidth: "800px",
+                borderRadius: "8px",
+                border: "1px solid #ffeaa7",
+                textAlign: "center",
+                fontSize: "16px",
+                fontWeight: "500",
+              }}
+            >
+              Thanks for visiting my site! FaceTrace is currently under
+              maintenance and will resume normal functionality soon.
+            </div>
             <Rank
               name={this.state.user.name}
               entries={this.state.user.entries}
