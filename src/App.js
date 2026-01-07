@@ -153,10 +153,12 @@ class App extends Component {
               Thanks for visiting my site! FaceTrace is currently under
               maintenance and will resume normal functionality soon.
             </div> */}
-            <Rank
-              name={this.state.user.name}
-              entries={this.state.user.entries}
-            />
+            {this.state.isSignedIn && (
+              <Rank
+                name={this.state.user.name}
+                entries={this.state.user.entries}
+              />
+            )}
             <ImageLinkForm
               onInputChange={this.onInputChange}
               onButtonSubmit={this.onButtonSubmit}
