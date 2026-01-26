@@ -71,7 +71,7 @@ class App extends Component {
       const image = document.getElementById("inputimage");
       if (image) {
         image.onload = () => {
-          // Call your backend instead of Clarifai directly
+          // Call backend
           fetch(`${process.env.REACT_APP_API_URL}/api/clarifai/detect-faces`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -120,7 +120,7 @@ class App extends Component {
     this.setState({
       input: "",
       imageUrl: "",
-      box: {},
+      box: [],
     });
   };
 
@@ -135,6 +135,7 @@ class App extends Component {
         />
         {this.state.route === "home" ? (
           <div>
+            {/* Maintenance Message */}
             {/* <div
               id="maintenance-message"
               style={{
