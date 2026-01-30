@@ -91,11 +91,11 @@ class App extends Component {
                   .then((response) => response.json())
                   .then((count) => {
                     this.setState(
-                      Object.assign(this.state.user, { entries: count })
+                      Object.assign(this.state.user, { entries: count }),
                     );
                   })
                   .catch((err) =>
-                    console.error("Error updating entries:", err)
+                    console.error("Error updating entries:", err),
                   );
               }
               this.displayFaceBox(this.calculateFaceLocation(result));
@@ -136,7 +136,7 @@ class App extends Component {
         {this.state.route === "home" ? (
           <div>
             {/* Maintenance Message */}
-            {/* <div
+            <div
               id="maintenance-message"
               style={{
                 backgroundColor: "#fff3cd",
@@ -153,7 +153,7 @@ class App extends Component {
             >
               Thanks for visiting my site! FaceTrace is currently under
               maintenance and will resume normal functionality soon.
-            </div> */}
+            </div>
             {this.state.isSignedIn && (
               <Rank
                 name={this.state.user.name}
