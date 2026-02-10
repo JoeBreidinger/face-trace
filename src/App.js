@@ -80,28 +80,32 @@ class App extends Component {
           })
             .then((response) => response.json())
             .then((result) => {
-              console.log("Clarifai API response:", result);
+              devLog("Clarifai API response:", result);
               if (result) {
-                fetch(`${process.env.REACT_APP_API_URL}/image`, {
-                  method: "PUT",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({
-                    id: this.state.user.id,
-                  }),
-                })
-                  .then((response) => response.json())
-                  .then((count) => {
-                    this.setState(
-                      Object.assign(this.state.user, { entries: count }),
-                    );
+                if (this.state.user.id) {
+                  fetch(`${process.env.REACT_APP_API_URL}/image`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      id: this.state.user.id,
+                    }),
                   })
-                  .catch((err) =>
-                    console.error("Error updating entries:", err),
-                  );
+                    .then((response) => response.json())
+                    .then((count) => {
+                      this.setState(
+                        Object.assign(this.state.user, { entries: count }),
+                      );
+                    })
+                    .catch((err) =>
+                      console.error("Error updating entries:", err),
+                    );
+                } else {
+                  devLog("Skipping /image update: no user id available");
+                }
               }
               this.displayFaceBox(this.calculateFaceLocation(result));
             })
-            .catch((error) => console.log("error", error));
+            .catch((error) => devLog("error", error));
         };
       }
     });
