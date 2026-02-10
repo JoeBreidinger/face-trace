@@ -80,7 +80,7 @@ class App extends Component {
           })
             .then((response) => response.json())
             .then((result) => {
-              devLog("Clarifai API response:", result);
+              console.log("Clarifai API response:", result);
               if (result) {
                 fetch(`${process.env.REACT_APP_API_URL}/image`, {
                   method: "PUT",
@@ -101,7 +101,7 @@ class App extends Component {
               }
               this.displayFaceBox(this.calculateFaceLocation(result));
             })
-            .catch((error) => devLog("error", error));
+            .catch((error) => console.log("error", error));
         };
       }
     });
