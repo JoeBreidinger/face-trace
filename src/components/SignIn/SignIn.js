@@ -1,5 +1,6 @@
 import React from "react";
 import "./SignIn.css";
+import { devLog } from "../../utils/logger";
 
 class SignIn extends React.Component {
   constructor(props) {
@@ -19,7 +20,7 @@ class SignIn extends React.Component {
   };
 
   onSubmitSignIn = () => {
-    console.log("Attempting sign in with:", this.state.signInEmail);
+    devLog("Attempting sign in with:", this.state.signInEmail);
     this.setState({ loading: true });
     fetch(`${process.env.REACT_APP_API_URL}/signin`, {
       method: "POST",
@@ -30,13 +31,13 @@ class SignIn extends React.Component {
       }),
     })
       .then((response) => {
-        console.log("Response status:", response.status);
+        devLog("Response status:", response.status);
         return response.json();
       })
       .then((user) => {
         this.setState({ loading: false });
         if (user === "success" || user.id) {
-          console.log("Sign in successful, routing to home");
+          devLog("Sign in successful, routing to home");
           if (user.id) {
             this.props.loadUser(user);
           }

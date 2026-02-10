@@ -1,5 +1,6 @@
 import "./App.css";
 import { Component } from "react";
+import { devLog } from "./utils/logger";
 import Navigation from "./components/Navigation/Navigation";
 import Register from "./components/Register/Register";
 import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
@@ -44,7 +45,7 @@ class App extends Component {
     const image = document.getElementById("inputimage");
     const width = Number(image.width);
     const height = Number(image.height);
-    console.log("Calculating face locations for", regions.length, "faces");
+    devLog("Calculating face locations for", regions.length, "faces");
     return regions.map((region) => {
       const clarifaiFace = region.region_info.bounding_box;
       return {
@@ -57,13 +58,13 @@ class App extends Component {
   };
 
   displayFaceBox = (box) => {
-    console.log("Setting box state with:", box);
+    devLog("Setting box state with:", box);
     this.setState({ box: box });
   };
 
   onInputChange = (event) => {
     this.setState({ input: event.target.value });
-    console.log(event.target.value);
+    devLog(event.target.value);
   };
 
   onButtonSubmit = () => {
@@ -79,7 +80,7 @@ class App extends Component {
           })
             .then((response) => response.json())
             .then((result) => {
-              console.log("Clarifai API response:", result);
+              devLog("Clarifai API response:", result);
               if (result) {
                 fetch(`${process.env.REACT_APP_API_URL}/image`, {
                   method: "PUT",
@@ -100,7 +101,7 @@ class App extends Component {
               }
               this.displayFaceBox(this.calculateFaceLocation(result));
             })
-            .catch((error) => console.log("error", error));
+            .catch((error) => devLog("error", error));
         };
       }
     });
